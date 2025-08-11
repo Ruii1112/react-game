@@ -8,7 +8,7 @@ export const GameProgress: React.FC = () => {
   const { state } = usePuzzle();
   const { puzzles, currentPuzzleIndex, unlockedPuzzles } = state;
   
-  const completedCount = unlockedPuzzles.filter((unlocked, index) => 
+  const completedCount = unlockedPuzzles.filter((_, index) => 
     index < currentPuzzleIndex || (index === currentPuzzleIndex && state.isAnswerCorrect)
   ).length;
   

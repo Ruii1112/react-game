@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { usePuzzle } from '../../contexts/PuzzleContext';
 import { clearProgress } from '../../utils/storage';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Sparkles, Trophy } from 'lucide-react';
 
 export const UnlockMessage: React.FC = () => {
   const { state, dispatch } = usePuzzle();
