@@ -33,7 +33,7 @@ export const AnswerSection: React.FC = () => {
   };
 
   return (
-    <Card className="bg-white max-w-5xl mx-auto border border-gray-200">
+    <Card className="bg-white max-w-2xl mx-auto border border-gray-200">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-2xl text-gray-800 font-bold">
           パスワード入力

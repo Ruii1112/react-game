@@ -9,7 +9,7 @@ export const PuzzleGame: React.FC = () => {
     <div className="min-h-screen w-full bg-white">
 
       {/* メインコンテンツ */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-8 space-y-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-8 pb-20 space-y-8">
         {/* ヘッダー */}
         <header className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
