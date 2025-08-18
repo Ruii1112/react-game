@@ -7,11 +7,18 @@ import { cn } from '../../lib/utils';
 
 export const AnswerSection: React.FC = () => {
   const { state, dispatch } = usePuzzle();
-  const { currentPuzzleIndex, unlockedPuzzles, feedback, isAnswerCorrect } = state;
+  const { currentPuzzleIndex, unlockedPuzzles, solvedPuzzles, puzzles, feedback, isAnswerCorrect } = state;
   const [answer, setAnswer] = useState('');
+  const isSolved = solvedPuzzles[currentPuzzleIndex];
+  const currentPuzzle = puzzles[currentPuzzleIndex];
+  
   useEffect(() => {
-    setAnswer('');
-  }, [currentPuzzleIndex]);
+    if (isSolved) {
+      setAnswer(currentPuzzle.answer);
+    } else {
+      setAnswer('');
+    }
+  }, [currentPuzzleIndex, isSolved, currentPuzzle.answer]);
 
   if (!unlockedPuzzles[currentPuzzleIndex]) {
     return null;
@@ -50,41 +57,41 @@ export const AnswerSection: React.FC = () => {
               placeholder="パスワードを入力"
               className={cn(
                 "text-center text-2xl font-bold h-14 px-4",
-                isAnswerCorrect && "bg-green-50 border-green-400",
+                (isAnswerCorrect || isSolved) && "bg-green-50 border-green-400",
                 feedback && !isAnswerCorrect && "border-red-400"
               )}
               pattern="[0-9]*"
               inputMode="numeric"
-              disabled={isAnswerCorrect}
+              disabled={isAnswerCorrect || isSolved}
               autoComplete="off"
-              autoFocus
+              autoFocus={!isSolved}
             />
           </div>
           
           <div className="flex gap-3">
             <Button
               type="submit"
-              variant={isAnswerCorrect ? "success" : "default"}
+              variant={isAnswerCorrect || isSolved ? "success" : "default"}
               size="xl"
-              disabled={!answer.trim() || isAnswerCorrect}
+              disabled={!answer.trim() || isAnswerCorrect || isSolved}
               className="flex-1 h-14 text-lg font-bold min-w-[150px]"
             >
-              {isAnswerCorrect ? "解除成功" : "確認"}
+              {isAnswerCorrect || isSolved ? "解除成功" : "確認"}
             </Button>
           </div>
         </form>
         
         {/* フィードバック表示 */}
-        {feedback && (
+        {(feedback || isSolved) && (
           <div 
             className={cn(
               "p-4 rounded text-center",
-              isAnswerCorrect 
+              (isAnswerCorrect || isSolved)
                 ? "bg-green-50 text-green-800 border border-green-300" 
                 : "bg-red-50 text-red-800 border border-red-300"
             )}
           >
-            {isAnswerCorrect ? "正解！扉が開きました" : "違うようです..."}
+            {isAnswerCorrect || isSolved ? "正解！扉が開きました" : "違うようです..."}
           </div>
         )}
         

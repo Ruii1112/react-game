@@ -7,6 +7,7 @@ const initialState: PuzzleState = {
   puzzles: PUZZLES_DATA,
   currentPuzzleIndex: 0,
   unlockedPuzzles: [true, false, false, false, false],
+  solvedPuzzles: [false, false, false, false, false],
   isAnswerCorrect: false,
   feedback: '',
   showUnlockMessage: false,
@@ -33,10 +34,13 @@ const puzzleReducer = (state: PuzzleState, action: PuzzleAction): PuzzleState =>
 
       if (isCorrect) {
         const newUnlockedPuzzles = [...state.unlockedPuzzles];
+        const newSolvedPuzzles = [...state.solvedPuzzles];
+        newSolvedPuzzles[state.currentPuzzleIndex] = true;
+        
         if (state.currentPuzzleIndex < state.puzzles.length - 1) {
           newUnlockedPuzzles[state.currentPuzzleIndex + 1] = true;
         }
-        saveProgress(newUnlockedPuzzles);
+        saveProgress(newUnlockedPuzzles, newSolvedPuzzles);
 
         return {
           ...state,
@@ -44,6 +48,7 @@ const puzzleReducer = (state: PuzzleState, action: PuzzleAction): PuzzleState =>
           feedback: '正解！',
           showUnlockMessage: true,
           unlockedPuzzles: newUnlockedPuzzles,
+          solvedPuzzles: newSolvedPuzzles,
         };
       }
 
@@ -59,7 +64,7 @@ const puzzleReducer = (state: PuzzleState, action: PuzzleAction): PuzzleState =>
       if (state.currentPuzzleIndex < state.puzzles.length - 1) {
         newUnlockedPuzzles[state.currentPuzzleIndex + 1] = true;
       }
-      saveProgress(newUnlockedPuzzles);
+      saveProgress(newUnlockedPuzzles, state.solvedPuzzles);
       
       return {
         ...state,
@@ -89,7 +94,8 @@ const puzzleReducer = (state: PuzzleState, action: PuzzleAction): PuzzleState =>
     case 'LOAD_PROGRESS':
       return {
         ...state,
-        unlockedPuzzles: action.payload,
+        unlockedPuzzles: action.payload.unlockedPuzzles,
+        solvedPuzzles: action.payload.solvedPuzzles,
       };
 
     default:
@@ -110,13 +116,30 @@ export const PuzzleProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   useEffect(() => {
     const savedProgress = loadProgress();
     // 保存された進捗が正しい形式かチェック
-    if (savedProgress && Array.isArray(savedProgress) && savedProgress.length === 5) {
-      // 最初のパズルは必ずアンロックされているべき
-      if (savedProgress[0] === true) {
-        dispatch({ type: 'LOAD_PROGRESS', payload: savedProgress });
-      } else {
-        // 無効なデータの場合はクリア
-        clearProgress();
+    if (savedProgress) {
+      // 新しい形式（オブジェクト）のデータ
+      if (typeof savedProgress === 'object' && !Array.isArray(savedProgress)) {
+        const { unlockedPuzzles, solvedPuzzles } = savedProgress;
+        
+        if (unlockedPuzzles && Array.isArray(unlockedPuzzles) && unlockedPuzzles.length === 5 &&
+            solvedPuzzles && Array.isArray(solvedPuzzles) && solvedPuzzles.length === 5) {
+          // 最初のパズルは必ずアンロックされているべき
+          if (unlockedPuzzles[0] === true) {
+            dispatch({ type: 'LOAD_PROGRESS', payload: { unlockedPuzzles, solvedPuzzles } });
+          } else {
+            // 無効なデータの場合はクリア
+            clearProgress();
+          }
+        }
+      } 
+      // 古い形式（配列）のデータ
+      else if (Array.isArray(savedProgress) && savedProgress.length === 5) {
+        if (savedProgress[0] === true) {
+          const defaultSolvedPuzzles = [false, false, false, false, false];
+          dispatch({ type: 'LOAD_PROGRESS', payload: { unlockedPuzzles: savedProgress, solvedPuzzles: defaultSolvedPuzzles } });
+        } else {
+          clearProgress();
+        }
       }
     }
   }, []);
