@@ -10,6 +10,7 @@ export const PUZZLES_DATA: Puzzle[] = [
     answer: '3232',
     nextPassword: '3232',
     unlocked: true,
+    backgroundColor: '#000000',
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ export const PUZZLES_DATA: Puzzle[] = [
     nextPassword: '3125',
     unlocked: false,
     unlockPassword: '3232',
+    backgroundColor: '#F9A825',
   },
   {
     id: 3,
@@ -26,6 +28,7 @@ export const PUZZLES_DATA: Puzzle[] = [
     nextPassword: '2331',
     unlocked: false,
     unlockPassword: '3125',
+    backgroundColor: '#FFEB00',
   },
   {
     id: 4,
@@ -34,6 +37,7 @@ export const PUZZLES_DATA: Puzzle[] = [
     nextPassword: '322',
     unlocked: false,
     unlockPassword: '2331',
+    backgroundColor: '#F8BBD9',
   },
   {
     id: 5,
@@ -42,6 +46,7 @@ export const PUZZLES_DATA: Puzzle[] = [
     nextPassword: null,
     unlocked: false,
     unlockPassword: '322',
+    backgroundColor: '#F5F5F5',
   },
 ];
 

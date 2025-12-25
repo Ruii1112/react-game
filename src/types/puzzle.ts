@@ -5,6 +5,7 @@ export interface Puzzle {
   nextPassword: string | null;
   unlocked: boolean;
   unlockPassword?: string;
+  backgroundColor: string;
 }
 
 export interface PuzzleState {
